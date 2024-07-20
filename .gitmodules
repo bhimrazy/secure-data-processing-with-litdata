@@ -1,0 +1,3 @@
+[submodule "minio"]
+	path = minio
+	url = https://github.com/bhimrazy/litdata-with-minio.git
