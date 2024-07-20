@@ -163,5 +163,6 @@ cython_debug/
 
 .lightning_studio
 .vscode
+.vscode-server
 .idea
 .wget-hsts
