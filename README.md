@@ -1,5 +1,8 @@
 # Unlock Secure Data Processing at Scale with LitData's Advanced Encryption Features
 
+![image](https://github.com/user-attachments/assets/6bb2474d-2c0c-42af-8c6e-43c495034341)
+
+
 In today's data-driven world, processing large datasets securely and efficiently is more crucial than ever. Enter LitData, a powerful Python library that's revolutionizing how we handle big data. Let's dive into how LitData's advanced encryption features can help you process data at scale while maintaining top-notch security.
 
 ## 🔒 Why Encryption Matters in Data Processing
