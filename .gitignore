@@ -166,4 +166,6 @@ cython_debug/
 .vscode-server
 .idea
 .wget-hsts
-tmp/
+data/
+lightning_logs/
+*.pem
