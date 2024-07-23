@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Dict, List
 
 import pandas as pd
@@ -48,7 +49,7 @@ def optimize_data(records: List[Dict], output_dir: str, encryption: FernetEncryp
         inputs=records,
         output_dir=output_dir,
         chunk_bytes="60MB",
-        num_workers=2,
+        num_workers=os.cpu_count() - 1,
         encryption=encryption
     )
 

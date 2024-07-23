@@ -1,10 +1,12 @@
+import os
+
 import lightning as L
 import torch
 import torch.nn as nn
-from litdata import StreamingDataset, StreamingDataLoader
+from litdata import StreamingDataLoader, StreamingDataset
 from litdata.utilities.encryption import FernetEncryption
-from torchvision import transforms as T
 from torchmetrics import Accuracy, F1Score
+from torchvision import transforms as T
 
 fernet = FernetEncryption.load("fernet.pem", password="your_super_secret_password")
 
@@ -46,7 +48,7 @@ class DermamnistDataModule(L.LightningDataModule):
             self.train_dataset,
             batch_size=self.batch_size,
             shuffle=True,
-            num_workers=7,
+            num_workers=os.cpu_count() - 1,
             persistent_workers=True,
         )
 
