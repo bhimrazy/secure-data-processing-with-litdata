@@ -3,6 +3,9 @@
 In today's data-driven world, processing large datasets securely and efficiently is more crucial than ever. Enter [LitData](https://github.com/Lightning-AI/litdata), a powerful Python library that's revolutionizing how we handle and optimize big data. Let's dive into how LitData's advanced encryption features can help you process data at scale while maintaining top-notch security.
 
 <div align="center">
+    <a target="_blank" href="https://lightning.ai/new?https://github.com/bhimrazy/secure-data-processing-with-litdata">
+      <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/app-2/studio-badge.svg" alt="Open In Studio"/>
+    </a><br/><br/>
     <img src="https://github.com/user-attachments/assets/6bb2474d-2c0c-42af-8c6e-43c495034341" alt="Cover Image" width="640" height="360" style="object-fit: cover;">
 </div>
 
