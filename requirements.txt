@@ -1,0 +1,3 @@
+lightning==2.3.3
+litdata==0.2.17
+medmnist==3.0.1
