@@ -40,7 +40,7 @@ def read_data(record: Dict) -> Dict:
         return {}
 
 
-def optimize_data(records: List[Dict], output_dir: str, fernet: FernetEncryption):
+def optimize_data(records: List[Dict], output_dir: str, encryption: FernetEncryption):
     """Optimize data using the provided records and encryption."""
     logging.info(f"Optimizing data and saving to {output_dir}")
     optimize(
@@ -48,8 +48,8 @@ def optimize_data(records: List[Dict], output_dir: str, fernet: FernetEncryption
         inputs=records,
         output_dir=output_dir,
         chunk_bytes="60MB",
-        num_workers=4,
-        encryption=fernet,
+        num_workers=2,
+        encryption=encryption
     )
 
 
@@ -60,7 +60,7 @@ def prepare():
     data_splits = split_data(df)
 
     # Set up encryption
-    fernet = FernetEncryption(password="mysecretkey", level="chunk")
+    fernet = FernetEncryption(password="your_super_secret_password", level="chunk")
 
     # Optimize data
     optimize_data(data_splits["train"], "data/dermamnist_optimized/train", fernet)
