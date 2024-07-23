@@ -1,125 +1,63 @@
-import lightning as L
 import torch
-import torch.nn as nn
+import numpy as np
 from litdata import StreamingDataset, StreamingDataLoader
 from litdata.utilities.encryption import FernetEncryption
-from torchvision import transforms as T
-from torchmetrics import Accuracy, F1Score
 
-fernet = FernetEncryption.load("fernet_key.pem", password="mysecretkey")
-
-image_transform = T.Compose(
-    [
-        T.Resize((28, 28)),
-        T.ToTensor(),
-    ]
-)
+fernet = FernetEncryption.load("fernet.pem", password="your_super_secret_password")
 
 
-# define dataset and datamodule
-class DermamnistDataset(StreamingDataset):
-    def __getitem__(self, idx):
-        item = super().__getitem__(idx)
-        image = image_transform(item["image"])
-        label = int(item["class"])
-        return image, label
+def collate_fn(batch):
+    """Collate function for the streaming data loader."""
+    images = np.array([np.array(item["image"]) for item in batch])
+    classes = [item["class"] for item in batch]
+
+    images_tensor = torch.tensor(images, dtype=torch.float32)
+    classes_tensor = torch.tensor(classes, dtype=torch.long)
+
+    return {"image": images_tensor, "class": classes_tensor}
 
 
-class DermamnistDataModule(L.LightningDataModule):
-    def __init__(self, batch_size=32):
-        super().__init__()
-        self.batch_size = batch_size
-
-    def setup(self, stage=None):
-        self.train_dataset = DermamnistDataset(
-            input_dir="data/dermamnist_optimized/train", encryption=fernet
-        )
-        self.val_dataset = DermamnistDataset(
-            input_dir="data/dermamnist_optimized/validation", encryption=fernet
-        )
-        self.test_dataset = DermamnistDataset(
-            input_dir="data/dermamnist_optimized/test", encryption=fernet
-        )
-
-    def train_dataloader(self):
-        return StreamingDataLoader(
-            self.train_dataset,
-            batch_size=self.batch_size,
-            shuffle=True,
-            num_workers=7,
-            persistent_workers=True,
-        )
-
-    def val_dataloader(self):
-        return StreamingDataLoader(
-            self.val_dataset,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=7,
-            persistent_workers=True,
-        )
-
-    def test_dataloader(self):
-        return StreamingDataLoader(
-            self.test_dataset,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=7,
-            persistent_workers=True,
-        )
+def get_dataloader(
+    dataset: StreamingDataset, batch_size: int, shuffle: bool
+) -> StreamingDataLoader:
+    """Helper function to create a dataloader."""
+    return StreamingDataLoader(
+        dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_fn
+    )
 
 
-# define model
-class LitModel(L.LightningModule):
-    def __init__(self):
-        super().__init__()
-        self.model = nn.Sequential(
-            nn.Linear(3 * 28 * 28, 128), nn.ReLU(), nn.Linear(128, 10)
-        )
-        self.criterion = torch.nn.CrossEntropyLoss()
-        self.accuracy = Accuracy(task="multiclass", num_classes=10)
-        self.f1 = F1Score(task="multiclass", num_classes=10)
+def main():
+    # Create streaming datasets
+    train_dataset = StreamingDataset(
+        input_dir="data/dermamnist_optimized/train", encryption=fernet
+    )
+    valid_dataset = StreamingDataset(
+        input_dir="data/dermamnist_optimized/validation", encryption=fernet
+    )
+    test_dataset = StreamingDataset(
+        input_dir="data/dermamnist_optimized/test", encryption=fernet
+    )
 
-    def forward(self, x):
-        x = x.view(x.size(0), -1)
-        return self.model(x)
+    # Create dataloaders
+    train_loader = get_dataloader(train_dataset, batch_size=32, shuffle=True)
+    valid_loader = get_dataloader(valid_dataset, batch_size=32, shuffle=False)
+    test_loader = get_dataloader(test_dataset, batch_size=32, shuffle=False)
 
-    def training_step(self, batch, batch_idx):
-        x, y = batch
-        y_hat = self(x)
-        loss = self.criterion(y_hat, y)
-        return loss
+    # Log dataset sizes
+    print("Number of training images:", len(train_dataset))
+    print("Number of validation images:", len(valid_dataset))
+    print("Number of test images:", len(test_dataset))
 
-    def validation_step(self, batch, batch_idx):
-        x, y = batch
-        y_hat = self(x)
-        loss = self.criterion(y_hat, y)
-        acc = self.accuracy(y_hat, y)
-        f1 = self.f1(y_hat, y)
-        self.log("val_loss", loss)
-        self.log("val_acc", acc)
-        self.log("val_f1", f1)
-        return loss
+    # Log example batches
+    train_batch = next(iter(train_loader))
+    print("Train Batch classes:", train_batch["class"])
 
-    def test_step(self, batch, batch_idx):
-        x, y = batch
-        y_hat = self(x)
-        loss = self.criterion(y_hat, y)
-        acc = self.accuracy(y_hat, y)
-        f1 = self.f1(y_hat, y)
-        self.log("test_loss", loss)
-        self.log("test_acc", acc)
-        self.log("test_f1", f1)
-        return loss
+    valid_batch = next(iter(valid_loader))
+    print("Validation Batch classes:", valid_batch["class"])
 
-    def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=0.02)
+    test_batch = next(iter(test_loader))
+    print("Test Batch classes:", test_batch["class"])
 
 
 if __name__ == "__main__":
-    L.seed_everything(42)
-    dm = DermamnistDataModule()
-    model = LitModel()
-    trainer = L.Trainer(max_epochs=10)
-    trainer.fit(model, dm)
-    trainer.test(model, dm.test_dataloader())
+    main()
