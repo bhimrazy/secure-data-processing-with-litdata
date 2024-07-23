@@ -275,8 +275,6 @@ Remember, security is an ongoing process. Stay updated with the latest best prac
 
 For more information on LitData and its features, check out the official documentation and [GitHub](https://github.com/Lightning-AI/litdata) repository.
 
-Happy encrypting! 🔒✨
-
 ## Author
 
 - [Bhimraj Yadav](https://github.com/bhimrazy)
