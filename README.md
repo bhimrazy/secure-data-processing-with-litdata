@@ -19,17 +19,17 @@ Before we jump into the technical details, let's consider why encryption is so i
 
 LitData takes data security to the next level by offering powerful and flexible encryption options designed for secure, efficient data processing at scale:
 
-1. **Flexible Encryption Levels**
+1. **Flexible Encryption Levels ✅**
 
    - Sample-level: Encrypt each data point individually
    - Chunk-level: Encrypt groups of samples for balanced security and performance
 
-2. **Always-Encrypted Data**
+2. **Always-Encrypted Data ✅**
 
    - Data remains encrypted at rest and in transit
    - On-the-fly decryption only when data is actively used
 
-3. **Key Advantages**
+3. **Key Advantages ✅**
 
    - Process parts of your dataset without decrypting everything
    - Minimize attack surface with data encrypted most of the time
@@ -37,7 +37,7 @@ LitData takes data security to the next level by offering powerful and flexible 
    - Seamless integration with existing data pipelines
    - Cloud-ready security for protected data wherever it resides
 
-4. **Efficient Resource Use**
+4. **Efficient Resource Use ✅**
    - Decrypt only what's needed, when it's needed
    - Decrypted data doesn't persist in memory, enhancing security
 
