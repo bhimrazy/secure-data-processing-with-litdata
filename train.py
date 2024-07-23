@@ -57,7 +57,7 @@ class DermamnistDataModule(L.LightningDataModule):
             self.val_dataset,
             batch_size=self.batch_size,
             shuffle=False,
-            num_workers=7,
+            num_workers=os.cpu_count() - 1,
             persistent_workers=True,
         )
 
@@ -66,7 +66,7 @@ class DermamnistDataModule(L.LightningDataModule):
             self.test_dataset,
             batch_size=self.batch_size,
             shuffle=False,
-            num_workers=7,
+            num_workers=os.cpu_count() - 1,
             persistent_workers=True,
         )
 
