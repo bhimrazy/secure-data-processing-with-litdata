@@ -1,11 +1,10 @@
-import os
-import pandas as pd
-from PIL import Image
 import logging
+from typing import Dict, List
+
+import pandas as pd
 from litdata import optimize
 from litdata.utilities.encryption import FernetEncryption
-from typing import List, Dict
-
+from PIL import Image
 
 # Set up logging
 logging.basicConfig(
