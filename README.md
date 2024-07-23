@@ -55,6 +55,9 @@ In this guide, we'll walk through a practical example of using LitData's encrypt
 First, install the required packages and download the dataset:
 
 ```bash
+# clone the repo
+git clone https://github.com/bhimrazy/secure-data-processing-with-litdata && cd secure-data-processing-with-litdata
+
 pip install -r requirements.txt
 python -m medmnist save --flag=dermamnist --folder=data/ --postfix=png --download=True --size=28
 ```
